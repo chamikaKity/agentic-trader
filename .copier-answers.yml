@@ -1,0 +1,17 @@
+# Changes here will be overwritten by Copier
+_commit: 5.0.2
+_src_path: https://github.com/DiamondLightSource/python-copier-template.git
+author_email: chamika.subashinie@gmail.com
+author_name: Chamika Subashinie
+description: agentic trading system demonstration
+distribution_name: agentic-trader
+docker: true
+docker_debug: true
+docs_type: README
+git_platform: github.com
+github_org: chamikaKity
+package_name: agentic_trader
+pypi: false
+repo_name: agentic-trader
+strict_typing: true
+type_checker: pyright
