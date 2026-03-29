@@ -336,6 +336,8 @@ Follow this sequence. Each step should be committed before starting the next.
 
 ## Testing
 
+- Run `tox` from the repo root before signing off on any task. All three envs
+  (`pre-commit`, `type-checking`, `tests`) must pass with `congratulations :)`.
 - `uv run pytest` from repo root
 - `tests/test_rule_engine.py`: cover STRONG_BUY, STRONG_SELL, HOLD, AMBIGUOUS,
   and the MACD crossover edge case (histogram was negative, now positive)

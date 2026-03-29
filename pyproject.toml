@@ -96,11 +96,19 @@ commands = [
 
 [tool.tox.env.type-checking]
 description = "Run pyright"
+dependency_groups = ["dev"]
+deps = [
+    "httpx",
+    "pandas",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.13.1",
+    "python-dotenv",
+]
 commands = [
     [
         "pyright",
         "--pythonpath",
-        "{env:VIRTUAL_ENV}/bin/python",
+        "{envpython}",
         "src",
         "tests",
         { replace = "posargs", default = [

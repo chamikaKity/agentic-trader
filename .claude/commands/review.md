@@ -68,6 +68,17 @@ missing test), `MINOR` (style or nit).
 End with a one-paragraph summary: overall assessment, whether it's ready to merge,
 and the top 1-2 things to fix first.
 
+## Posting to GitHub
+
+After writing the review, automatically post it as a comment on the open PR for the
+current branch. Use this exact sequence:
+
+1. Run `gh pr list --head $(git branch --show-current)` to find the PR number.
+2. If a PR is found, post the full review body via:
+   `gh pr comment <PR_NUMBER> --body "<review text>"`
+3. Print the comment URL returned by `gh` so the user can see it.
+4. If no open PR exists for the current branch, skip posting and say so.
+
 ---
 
 $ARGUMENTS
