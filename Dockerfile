@@ -5,6 +5,17 @@ FROM ghcr.io/diamondlightsource/ubuntu-devcontainer:noble AS developer
 # Add any system dependencies for the developer/build environment here
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     graphviz \
+    curl \
+    ca-certificates \
+    gnupg \
+    && mkdir -p -m 755 /etc/apt/keyrings \
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    | gpg --dearmor -o /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+    > /etc/apt/sources.list.d/github-cli.list \
+    && apt-get update \
+    && apt-get install -y gh \
     && apt-get dist-clean
 
 # The build stage installs the context into the venv
