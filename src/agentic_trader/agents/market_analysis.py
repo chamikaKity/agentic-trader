@@ -1,5 +1,7 @@
 """Market analysis agent: fetches OHLCV candles from Binance and computes indicators."""
 
+from typing import Literal
+
 import httpx
 import pandas as pd
 
@@ -102,6 +104,8 @@ async def fetch_indicators(symbol: str, interval: str = "1h") -> IndicatorSet:
     low = df["low"]
     volume = df["volume"]
 
+    # pandas-ta does not publish Python 3.12 wheels; indicators are implemented
+    # directly using pandas with identical formulas.
     rsi_series = _rsi(close)
     macd_line_s, signal_line_s, histogram_s = _macd(close)
     bb_upper_s, bb_lower_s = _bollinger(close)
@@ -115,7 +119,7 @@ async def fetch_indicators(symbol: str, interval: str = "1h") -> IndicatorSet:
     bb_lower = float(bb_lower_s.iloc[-1])
 
     if last > bb_upper:
-        bb_position: str = "above"
+        bb_position: Literal["above", "below", "inside"] = "above"
     elif last < bb_lower:
         bb_position = "below"
     else:
@@ -132,7 +136,7 @@ async def fetch_indicators(symbol: str, interval: str = "1h") -> IndicatorSet:
         signal_line=float(signal_line_s.iloc[-1]),
         bb_upper=bb_upper,
         bb_lower=bb_lower,
-        bb_position=bb_position,  # type: ignore[arg-type]
+        bb_position=bb_position,
         ema20=float(ema20_s.iloc[-1]),
         ema50=float(ema50_s.iloc[-1]),
         atr=float(atr_s.iloc[-1]),

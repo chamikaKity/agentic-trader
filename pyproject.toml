@@ -143,6 +143,3 @@ lint.select = [
 # See https://github.com/DiamondLightSource/python-copier-template/issues/154
 # Remove this line to forbid private member access in tests
 "tests/**/*" = ["SLF001"]
-
-[tool.uv.sources]
-pandas-ta = { git = "https://github.com/twopirllc/pandas-ta.git", rev = "bc3b292" }
