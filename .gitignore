@@ -70,3 +70,6 @@ lockfiles/
 # ruff cache
 .ruff_cache/
 .DS_Store
+
+# environment variables
+.env
