@@ -1,8 +1,7 @@
-from __future__ import annotations
-
+from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class IndicatorSet(BaseModel):
@@ -11,7 +10,7 @@ class IndicatorSet(BaseModel):
     current_price: float
     rsi: float
     macd_histogram: float
-    macd_histogram_prev: float
+    macd_histogram_prev: float = Field(exclude=True)
     macd_line: float
     signal_line: float
     bb_upper: float
@@ -31,7 +30,7 @@ class RuleEngineResult(BaseModel):
 class NewsItem(BaseModel):
     title: str
     source: str
-    published_at: str
+    published_at: datetime
     sentiment: float
 
 
@@ -61,7 +60,7 @@ class AnalysisResponse(BaseModel):
     interval: str
     indicators: IndicatorSet
     rule_engine: RuleEngineResult
-    news: NewsResult | None = None
+    news: NewsResult | None = None  # None = not fetched (non-AMBIGUOUS path)
     llm_decision: LLMDecision | None = None
     risk: RiskResult
     agent_trace: list[str]
