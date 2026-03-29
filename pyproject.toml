@@ -12,7 +12,9 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 description = "agentic trading system demonstration"
-dependencies = [] # Add project dependencies here, e.g. ["click", "numpy"]
+dependencies = [
+    "pydantic>=2.12.5",
+] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
 license.file = "LICENSE"
 readme = "README.md"
