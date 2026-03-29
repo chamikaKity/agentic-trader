@@ -21,7 +21,7 @@ def make_indicators(**overrides: float | str) -> IndicatorSet:
         "volume_sma20": 100.0,
     }
     defaults.update(overrides)
-    return IndicatorSet(**defaults)  # type: ignore[arg-type]
+    return IndicatorSet(**defaults)  # type: ignore[arg-type]  # kwargs dict passed to Pydantic model; runtime-safe
 
 
 def test_strong_buy() -> None:
@@ -92,6 +92,19 @@ def test_macd_edge_histogram_zero_no_crossover() -> None:
     assert result.signal != "STRONG_BUY"
 
 
+def test_macd_crossover_from_zero() -> None:
+    """prev == 0 counts as ≤ 0, so a positive crossover should fire."""
+    indicators = make_indicators(
+        rsi=30.0,
+        macd_histogram=0.01,
+        macd_histogram_prev=0.0,
+        current_price=50000.0,
+        ema20=49000.0,
+    )
+    result = evaluate(indicators)
+    assert result.signal == "STRONG_BUY"
+
+
 def test_macd_edge_histogram_negative_to_positive_crossover() -> None:
     """Histogram was negative, now positive — crossover SHOULD fire."""
     indicators = make_indicators(
@@ -103,3 +116,16 @@ def test_macd_edge_histogram_negative_to_positive_crossover() -> None:
     )
     result = evaluate(indicators)
     assert result.signal == "STRONG_BUY"
+
+
+def test_ambiguous_crossover_but_neutral_rsi() -> None:
+    """MACD crossover fires but RSI is neutral — no rule matches, so AMBIGUOUS."""
+    indicators = make_indicators(
+        rsi=50.0,
+        macd_histogram=0.5,
+        macd_histogram_prev=-0.1,
+        current_price=50000.0,
+        ema20=49000.0,
+    )
+    result = evaluate(indicators)
+    assert result.signal == "AMBIGUOUS"
