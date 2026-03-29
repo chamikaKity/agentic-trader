@@ -13,6 +13,8 @@ classifiers = [
 ]
 description = "agentic trading system demonstration"
 dependencies = [
+    "httpx",
+    "pandas",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.13.1",
     "python-dotenv>=1.2.2",
@@ -25,6 +27,7 @@ requires-python = ">=3.11"
 [dependency-groups]
 dev = [
     "copier",
+    "pandas-stubs>=3.0.0.260204",
     "pre-commit",
     "pyright",
     "pytest",
