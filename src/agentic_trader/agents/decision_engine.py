@@ -26,10 +26,12 @@ _SYSTEM_PROMPT = (
 )
 # fmt: on
 
+_CLIENT = AsyncAnthropic(api_key=settings.anthropic_api_key, timeout=30.0)
+
 _SAFE_DEFAULT = LLMDecision(
     action="HOLD",
     confidence=0.5,
-    reasoning="LLM response could not be parsed",
+    reasoning="Parse error",
     risk_flags=["llm_parse_error"],
 )
 
@@ -72,9 +74,8 @@ async def decide(indicators: IndicatorSet, news: NewsResult) -> LLMDecision:
 
     Never raises — returns _SAFE_DEFAULT on any failure.
     """
-    client = AsyncAnthropic(api_key=settings.anthropic_api_key)
     try:
-        message = await client.messages.create(
+        message = await _CLIENT.messages.create(
             model=_MODEL,
             max_tokens=512,
             system=_SYSTEM_PROMPT,
