@@ -13,6 +13,7 @@ classifiers = [
 ]
 description = "agentic trading system demonstration"
 dependencies = [
+    "anthropic>=0.87.0",
     "httpx",
     "pandas",
     "pydantic>=2.12.5",
@@ -98,6 +99,7 @@ commands = [
 description = "Run pyright"
 dependency_groups = ["dev"]
 deps = [
+    "anthropic>=0.87.0",
     "httpx",
     "pandas",
     "pydantic>=2.12.5",
