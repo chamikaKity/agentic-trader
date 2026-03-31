@@ -2,7 +2,7 @@
 
 from typing import Any, Literal
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from agentic_trader.agents import (
@@ -57,8 +57,6 @@ async def analyze(
     confidence: float | None = None
 
     if rule_result.signal == "AMBIGUOUS":
-        llm_called = True
-
         news = await info_retrieval.fetch_news(symbol)
         if news.available:
             agent_trace.append(
@@ -71,13 +69,16 @@ async def analyze(
             )
 
         llm_decision = await decision_engine.decide(indicators, news)
+        llm_called = True
         agent_trace.append(
             f"DecisionEngine: LLM called, returned {llm_decision.action}"
             f" ({llm_decision.confidence:.2f} confidence)"
         )
         confidence = llm_decision.confidence
     else:
-        # Map deterministic rule signal to a synthetic LLMDecision
+        # Map deterministic rule signal to a synthetic LLMDecision.
+        # Presentational only — confidence=1.0 is not passed to risk_management
+        # (which receives confidence=None on deterministic signal paths)
         action: Literal["BUY", "SELL", "HOLD"]
         match rule_result.signal:
             case "STRONG_BUY":
@@ -118,7 +119,12 @@ async def candles(
     symbol: str,
     interval: str = Query(default="1h"),
 ) -> list[dict[str, Any]]:  # Any: lightweight-charts mixed-value dicts
-    return await market_analysis.fetch_candles(symbol, interval)
+    try:
+        return await market_analysis.fetch_candles(symbol, interval)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502, detail="Failed to fetch candle data from Binance"
+        ) from exc
 
 
 @app.get("/api/indicators/{symbol}", response_model=IndicatorSet)
