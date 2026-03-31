@@ -29,6 +29,12 @@ def test_high_volatility_no_confidence() -> None:
     assert result.position_warning is None
 
 
+def test_volatility_boundary_exact() -> None:
+    # ATR/price = 0.03 exactly → NORMAL (spec uses strict >, not >=)
+    result = compute(current_price=10_000.0, atr=300.0, confidence=None)
+    assert result.volatility == "NORMAL"
+
+
 def test_risk_reward_ratio() -> None:
     # stop distance = 1.5 * ATR, target distance = 2.5 * ATR
     # R/R = 2.5 / 1.5 ≈ 1.667
