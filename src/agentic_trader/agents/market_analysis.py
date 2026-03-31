@@ -1,6 +1,6 @@
 """Market analysis agent: fetches OHLCV candles from Binance and computes indicators."""
 
-from typing import Literal
+from typing import Any, Literal
 
 import httpx
 import pandas as pd
@@ -142,3 +142,28 @@ async def fetch_indicators(symbol: str, interval: str = "1h") -> IndicatorSet:
         atr=float(atr_s.iloc[-1]),
         volume_sma20=float(volume_sma20_s.iloc[-1]),
     )
+
+
+async def fetch_candles(
+    symbol: str, interval: str = "1h"
+) -> list[dict[str, Any]]:  # Any: lightweight-charts dict values are mixed numeric/int
+    """Fetch 200 raw OHLCV candles from Binance for charting."""
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        response = await client.get(
+            _KLINES_URL,
+            params={"symbol": symbol, "interval": interval, "limit": 200},
+        )
+        response.raise_for_status()
+        raw: list[list[Any]] = response.json()  # Any: Binance JSON array of mixed types
+
+    return [
+        {
+            "time": int(candle[0]) // 1000,  # ms → seconds for lightweight-charts
+            "open": float(candle[1]),
+            "high": float(candle[2]),
+            "low": float(candle[3]),
+            "close": float(candle[4]),
+            "volume": float(candle[5]),
+        }
+        for candle in raw
+    ]

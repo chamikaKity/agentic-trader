@@ -14,11 +14,13 @@ classifiers = [
 description = "agentic trading system demonstration"
 dependencies = [
     "anthropic>=0.87.0",
+    "fastapi>=0.135.2",
     "httpx",
     "pandas",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.13.1",
     "python-dotenv>=1.2.2",
+    "uvicorn>=0.42.0",
 ] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
 license.file = "LICENSE"
@@ -100,11 +102,13 @@ description = "Run pyright"
 dependency_groups = ["dev"]
 deps = [
     "anthropic>=0.87.0",
+    "fastapi>=0.100.0",
     "httpx",
     "pandas",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.13.1",
     "python-dotenv",
+    "uvicorn",
 ]
 commands = [
     [
