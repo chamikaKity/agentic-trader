@@ -70,6 +70,9 @@ async def fetch_news(symbol: str) -> NewsResult:
             bearish_total = 0
             votes_total = 0
 
+            # Votes are aggregated across all fetched posts regardless of whether
+            # the item parsed successfully — matches the spec formula: sentiment
+            # across all posts.
             for raw in raw_results[:_LIMIT]:
                 parsed = _parse_item(raw)
                 if parsed is not None:
@@ -79,6 +82,8 @@ async def fetch_news(symbol: str) -> NewsResult:
                 bearish_total += int(votes.get("negative", 0))
                 votes_total += int(votes.get("total", 0))
 
+            # Treat zero parseable items as unavailable — no usable data to pass
+            # downstream.
             if not items:
                 return NewsResult(available=False)
 
