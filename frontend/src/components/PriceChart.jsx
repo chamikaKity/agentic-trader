@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { createChart, LineSeries } from 'lightweight-charts'
+import { createChart, CandlestickSeries, LineSeries } from 'lightweight-charts'
 import { candles } from '../api'
 
 function computeEMA(closes, period) {
@@ -36,7 +36,7 @@ export default function PriceChart({ symbol, interval }) {
       height: containerRef.current.clientHeight || 400,
     })
 
-    const candleSeries = chart.addCandlestickSeries({
+    const candleSeries = chart.addSeries(CandlestickSeries, {
       upColor: '#00ff88',
       downColor: '#ff4444',
       borderUpColor: '#00ff88',
