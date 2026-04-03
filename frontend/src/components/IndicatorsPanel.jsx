@@ -2,7 +2,7 @@ export default function IndicatorsPanel({ indicators }) {
   if (!indicators) return null
 
   const rsiColor =
-    indicators.rsi < 30 ? '#00ff88' : indicators.rsi > 70 ? '#ff4444' : '#888888'
+    indicators.rsi < 35 ? '#00ff88' : indicators.rsi > 65 ? '#ff4444' : '#888888'
 
   const macdColor = indicators.macd_histogram >= 0 ? '#00ff88' : '#ff4444'
 

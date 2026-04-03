@@ -145,7 +145,7 @@ export default function App() {
         <>
           {/* PriceChart — full width */}
           <div style={{ marginBottom: '16px' }}>
-            <PriceChart symbol={data.symbol} interval={data.interval} />
+            <PriceChart symbol={symbol} interval={interval} />
           </div>
 
           {/* 2-column grid */}
@@ -164,7 +164,11 @@ export default function App() {
 
             {/* Right: DecisionCard + NewsFeed */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <DecisionCard decision={data.llm_decision} risk={data.risk} />
+              <DecisionCard
+                decision={data.llm_decision}
+                ruleSignal={data.rule_engine?.signal}
+                risk={data.risk}
+              />
               <NewsFeed news={data.news} />
             </div>
           </div>

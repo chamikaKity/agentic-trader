@@ -4,12 +4,12 @@ const BADGE_STYLES = {
   HOLD: { background: '#ffaa00', color: '#000000' },
 }
 
-export default function DecisionCard({ decision, risk }) {
-  if (!decision || !risk) return null
+export default function DecisionCard({ decision, ruleSignal, risk }) {
+  if (!risk) return null
 
-  const action = decision.action
+  const action = decision?.action ?? ruleSignal ?? 'HOLD'
   const badge = BADGE_STYLES[action] || BADGE_STYLES.HOLD
-  const confidencePct = Math.round((decision.confidence || 0) * 100)
+  const confidencePct = decision ? Math.round((decision.confidence || 0) * 100) : null
 
   return (
     <div
@@ -51,32 +51,34 @@ export default function DecisionCard({ decision, risk }) {
       </div>
 
       {/* Confidence bar */}
-      <div style={{ marginBottom: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-          <span style={{ fontSize: '11px', color: '#555' }}>Confidence</span>
-          <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#888' }}>
-            {confidencePct}%
-          </span>
-        </div>
-        <div
-          style={{
-            background: '#2a2a2a',
-            borderRadius: '3px',
-            height: '6px',
-            overflow: 'hidden',
-          }}
-        >
+      {confidencePct !== null && (
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <span style={{ fontSize: '11px', color: '#555' }}>Confidence</span>
+            <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#888' }}>
+              {confidencePct}%
+            </span>
+          </div>
           <div
             style={{
-              width: `${confidencePct}%`,
-              height: '100%',
-              background: badge.background,
+              background: '#2a2a2a',
               borderRadius: '3px',
-              transition: 'width 0.3s ease',
+              height: '6px',
+              overflow: 'hidden',
             }}
-          />
+          >
+            <div
+              style={{
+                width: `${confidencePct}%`,
+                height: '100%',
+                background: badge.background,
+                borderRadius: '3px',
+                transition: 'width 0.3s ease',
+              }}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Reasoning */}
       {decision.reasoning && (
@@ -107,19 +109,19 @@ export default function DecisionCard({ decision, risk }) {
         <div>
           <div style={{ fontSize: '10px', color: '#555', marginBottom: '2px' }}>Stop Loss</div>
           <div style={{ fontSize: '13px', fontFamily: 'monospace', color: '#ff4444' }}>
-            {risk.stop_loss.toFixed(2)}
+            {risk.stop_loss?.toFixed(2) ?? '—'}
           </div>
         </div>
         <div>
           <div style={{ fontSize: '10px', color: '#555', marginBottom: '2px' }}>Take Profit</div>
           <div style={{ fontSize: '13px', fontFamily: 'monospace', color: '#00ff88' }}>
-            {risk.take_profit.toFixed(2)}
+            {risk.take_profit?.toFixed(2) ?? '—'}
           </div>
         </div>
         <div>
           <div style={{ fontSize: '10px', color: '#555', marginBottom: '2px' }}>R/R Ratio</div>
           <div style={{ fontSize: '13px', fontFamily: 'monospace', color: '#cccccc' }}>
-            {risk.risk_reward.toFixed(2)}x
+            {risk.risk_reward?.toFixed(2) ?? '—'}x
           </div>
         </div>
       </div>
