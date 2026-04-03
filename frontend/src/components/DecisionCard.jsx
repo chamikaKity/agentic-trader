@@ -81,7 +81,7 @@ export default function DecisionCard({ decision, ruleSignal, risk }) {
       )}
 
       {/* Reasoning */}
-      {decision.reasoning && (
+      {decision?.reasoning && (
         <div
           style={{
             fontSize: '12px',
@@ -154,9 +154,9 @@ export default function DecisionCard({ decision, ruleSignal, risk }) {
       </div>
 
       {/* Risk flags */}
-      {decision.risk_flags && decision.risk_flags.length > 0 && (
+      {decision?.risk_flags?.length > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-          {decision.risk_flags.map((flag, i) => (
+          {decision.risk_flags?.map((flag, i) => (
             <span
               key={i}
               style={{
