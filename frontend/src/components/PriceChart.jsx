@@ -78,10 +78,14 @@ export default function PriceChart({ symbol, interval }) {
         const ema20Values = computeEMA(closes, 20)
         const ema50Values = computeEMA(closes, 50)
 
-        ema20Series.setData(times.map((t, i) => ({ time: t, value: ema20Values[i] })))
-        ema50Series.setData(times.map((t, i) => ({ time: t, value: ema50Values[i] })))
+        ema20Series.setData(
+          times.slice(19).map((t, i) => ({ time: t, value: ema20Values[i + 19] }))
+        )
+        ema50Series.setData(
+          times.slice(49).map((t, i) => ({ time: t, value: ema50Values[i + 49] }))
+        )
       })
-      .catch(() => {})
+      .catch(err => console.error('[PriceChart] failed to load candles:', err))
 
     const observer = new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect
